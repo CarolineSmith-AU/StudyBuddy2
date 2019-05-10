@@ -1,3 +1,146 @@
 <resources>
     <string name="app_name">StudyBuddy2</string>
+    <string name="transition_name_1">shared_element_logo</string>
+    <string name="select_your_school">Select your school</string>
+    <string name="confirm_school_button">Confirm School</string>
+    <string name="logo_description">StudyBuddy logo</string>
+    <string-array name="canvas_schools">
+        <item>Alfred State College</item>
+        <item>Ambra College</item>
+        <item>American College of Education</item>
+        <item>Arizona State University</item>
+        <item>Association of Independent Colleges of Art and Design</item>
+        <item>Athabasca University</item>
+        <item>Auburn University Main Campus</item>
+        <item>Austin Peay State University</item>
+        <item>Avans University of Applied Sciences</item>
+        <item>Ball State University</item>
+        <item>Barry University</item>
+        <item>Bay Path College</item>
+        <item>Beacon College</item>
+        <item>Bellevue University</item>
+        <item>Berkshire School</item>
+        <item>Blekinge Institute of Technology</item>
+        <item>Boston University</item>
+        <item>Bowling Green State University</item>
+        <item>Brigham Young University-Hawaii</item>
+        <item>Broward College</item>
+        <item>Brown University</item>
+        <item>Canberra Institute of Technology</item>
+        <item>Canyons School District (UEN)</item>
+        <item>Cascadia Community College</item>
+        <item>Center for Creative Leadership</item>
+        <item>CIRES, University of Colorado at Boulder</item>
+        <item>Claremont Graduate University</item>
+        <item>Clemson University</item>
+        <item>College of William and Mary</item>
+        <item>Colorado Community College System</item>
+        <item>Colorado State University</item>
+        <item>Colorado State University, Global Campus</item>
+        <item>Columbia Business School</item>
+        <item>Columbia University</item>
+        <item>Concordia University Wisconsin</item>
+        <item>Creighton University</item>
+        <item>Criswell College</item>
+        <item>Dalhousie University</item>
+        <item>Dartmouth College</item>
+        <item>Del Mar College</item>
+        <item>East Carolina University</item>
+        <item>Embry-Riddle Aeronautical University-Worldwide</item>
+        <item>Excelsior College</item>
+        <item>Florida Institute of Technology</item>
+        <item>Florida State University</item>
+        <item>Gannon University</item>
+        <item>Great Basin College</item>
+        <item>Halmstad University</item>
+        <item>HAMK University of Applied Sciences</item>
+        <item>Hanze University of Applied Sciences</item>
+        <item>Indiana University</item>
+        <item>Iowa State University</item>
+        <item>Johnson County Community College</item>
+        <item>Kansas State University</item>
+        <item>Keene State College</item>
+        <item>Keiser University-Ft. Lauderdale</item>
+        <item>Kirkwood Community College</item>
+        <item>Linnaeus University</item>
+        <item>London South Bank University</item>
+        <item>Manchester University</item>
+        <item>Maricopa Community College District</item>
+        <item>Marquette University</item>
+        <item>McHenry County College</item>
+        <item>Metropolitan Community College Area</item>
+        <item>Michigan State University Global Campus</item>
+        <item>Mid Sweden University</item>
+        <item>Minneapolis College of Art and Design</item>
+        <item>Missouri State University-Springfield</item>
+        <item>Missouri University of Science and Technology</item>
+        <item>New York Institute of Technology</item>
+        <item>North Seattle College</item>
+        <item>Northpoint Bible College</item>
+        <item>Ocean County College</item>
+        <item>Oakwood University</item>
+        <item>Ohio State University</item>
+        <item>Otis College of Art and Design</item>
+        <item>Parkland College</item>
+        <item>Peninsula College</item>
+        <item>Quincy College</item>
+        <item>Relay Graduate School</item>
+        <item>Renton Technical College</item>
+        <item>Richland Community College</item>
+        <item>Royal Roads University</item>
+        <item>Ryerson University</item>
+        <item>Santa Clara University</item>
+        <item>Sauk Valley Community College</item>
+        <item>Scottsdale Community College</item>
+        <item>Seattle Community College-Central Campus</item>
+        <item>Shoreline Community College</item>
+        <item>Simon Fraser University</item>
+        <item>Sonoma State University</item>
+        <item>Southeast Technical Institute</item>
+        <item>Spokane Falls Community College</item>
+        <item>St. George\'s University</item>
+        <item>Suffolk University</item>
+        <item>SUNY College of Technology at Alfred</item>
+        <item>Tacoma Community College</item>
+        <item>The University of Texas at Arlington</item>
+        <item>The University of West Florida</item>
+        <item>Turku University of Applied Sciences</item>
+        <item>University of Alabama in Huntsville</item>
+        <item>University of California, Berkeley</item>
+        <item>University of California, Davis</item>
+        <item>University of California, Irvine</item>
+        <item>University of Canberra</item>
+        <item>University of Central Florida</item>
+        <item>University of Chicago, Booth School of Business</item>
+        <item>University of Colorado at Denver</item>
+        <item>University of Delaware</item>
+        <item>University of Derby</item>
+        <item>University of Greenwich</item>
+        <item>University of Iowa</item>
+        <item>University of Manchester</item>
+        <item>University of Michigan</item>
+        <item>University of Missouri-Kansas City</item>
+        <item>University of Murcia</item>
+        <item>University of New Hampshire</item>
+        <item>University of North Texas</item>
+        <item>University of Northwestern Ohio</item>
+        <item>University of Oregon</item>
+        <item>University of Rhode Island</item>
+        <item>University of Saskatchewan</item>
+        <item>University of South Dakota</item>
+        <item>University of South Florida</item>
+        <item>University of South Wales</item>
+        <item>University of Southern Mississippi</item>
+        <item>University of Utah</item>
+        <item>University of Washington-Seattle Campus</item>
+        <item>Utah State University</item>
+        <item>Utah Valley University</item>
+        <item>Wake Forest University</item>
+        <item>Weber State University</item>
+    </string-array>
+
+    <!-- Use Auburn University as a trial run. Other colleges/universities may require specific designs. -->
+    <string-array name="canvas_auburn_university">
+        <item>Auburn University Main Campus</item>
+    </string-array>
 </resources>
