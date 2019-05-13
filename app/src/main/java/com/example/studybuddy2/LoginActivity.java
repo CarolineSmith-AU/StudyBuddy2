@@ -16,6 +16,8 @@ import java.util.Objects;
 public class LoginActivity extends AppCompatActivity {
 
     TextInputLayout text_input_school;
+    String selectedSchool;
+    String authenticationURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +26,14 @@ public class LoginActivity extends AppCompatActivity {
 
         text_input_school = findViewById(R.id.text_input_school);
 
-        //START: set up toolbar
+        //<< -------------------- set up toolbar -------------------- >>
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Select School");
-        //END
 
+
+
+        //<< -------------------- set up searchable spinner -------------------- >>
         Spinner schoolSearchableSpinner = findViewById(R.id.schoolSearchableSpinner);
         //create ArrayAdapter using string array and default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -42,13 +46,11 @@ public class LoginActivity extends AppCompatActivity {
         schoolSearchableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedSchool = parent.getItemAtPosition(position).toString();
+                selectedSchool = parent.getItemAtPosition(position).toString();
 
                 switch (selectedSchool) {
                     case "Alfred State College":
-                        Toast.makeText(LoginActivity.this, selectedSchool + " selected", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "Ambra College":
+                        authenticationURL = "https://alfredu.instructure.com/login/oauth2/auth/";
                         Toast.makeText(LoginActivity.this, selectedSchool + " selected", Toast.LENGTH_SHORT).show();
                         break;
                     case "American College of Education":

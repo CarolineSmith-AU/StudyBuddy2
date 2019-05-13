@@ -18,7 +18,7 @@
         android:layout_marginBottom="8dp"
         android:src="@mipmap/ic_launcher_round"
         android:transitionName="@string/transition_name_1"
-        android:contentDescription="@string/logo_description"
+        android:contentDescription="StudyBuddy logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintLeft_toLeftOf="parent"
