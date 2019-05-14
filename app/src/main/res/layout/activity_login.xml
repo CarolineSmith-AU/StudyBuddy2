@@ -26,25 +26,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.259" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/text_input_school"
-        android:layout_width="405dp"
-        android:layout_height="78dp"
-        app:errorEnabled="true"
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+        android:id="@+id/schoolSearchableSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:hintText="@string/select_your_school"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logoImageView"
-        app:layout_constraintVertical_bias="0.089">
+        app:layout_constraintVertical_bias="0.23"
+        tools:layout_editor_absoluteX="0dp">
 
-        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-            android:id="@+id/schoolSearchableSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            app:hintText="@string/select_your_school">
-
-        </com.toptoche.searchablespinnerlibrary.SearchableSpinner>
-    </android.support.design.widget.TextInputLayout>
+    </com.toptoche.searchablespinnerlibrary.SearchableSpinner>
 
     <Button
         android:id="@+id/confirmSchoolButton"
@@ -55,6 +47,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_school"
-        app:layout_constraintVertical_bias="0.106" />
+        app:layout_constraintTop_toBottomOf="@+id/schoolSearchableSpinner"
+        app:layout_constraintVertical_bias="0.33" />
 </android.support.constraint.ConstraintLayout>

@@ -4,8 +4,8 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.studybuddy2"
-        minSdkVersion 26
-        targetSdkVersion 28
+        minSdkVersion 23
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
