@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 import com.instructure.canvasapi.utilities.*;
-import retrofit.RetrofitError;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -125,5 +124,7 @@ public class LoginActivity extends AppCompatActivity {
             values.add(new BasicNameValuePair("response_type", "code"));
             values.add(new BasicNameValuePair("redirect_uri", "urn:ietf:wg:oauth:2.0:oob"));
             values.add(new BasicNameValuePair("code", code));
+
+
     }
 }
