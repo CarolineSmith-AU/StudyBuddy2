@@ -1,6 +1,6 @@
 package com.example.studybuddy2;
 
-import android.support.design.widget.TextInputLayout;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,9 +11,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.Toast;
+import com.instructure.canvasapi.utilities.*;
+import retrofit.RetrofitError;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
+import java.util.LinkedList;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
@@ -22,6 +26,9 @@ public class LoginActivity extends AppCompatActivity {
     private String authenticationURL;
     private Button confirmSchoolButton;
     private static final String successURL = "/login/oauth2/auth?code=";
+    private static final String CLIENT_ID = "";
+    private static final String CLIENT_SECRET = "";
+    private String requestCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,20 +96,34 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 /* -------------------- set up WebView for authenticationURL --------------------*/
-                WebView web = new WebView(LoginActivity.this);
+                final WebView web = new WebView(LoginActivity.this);
                 setContentView(web);
                 web.loadUrl(authenticationURL);
 
                 web.setWebViewClient(new WebViewClient() {
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                        if (url.contains(successURL)) {
-                            String requestCode = ;
+                        if (url.contains(successURL)) { //if (user has successfully logged in)
+                            requestCode = url.substring(url.indexOf(successURL) + url.length());
+                            return true;
+                        } else {
+                            //redirect back to authenticationURL
+                            //web.loadUrl(authenticationURL);
+                            return false;
                         }
-                        return super.shouldOverrideUrlLoading(view, url);
                     }
                 });
             }
         });
+    }
+
+    /* -------------------- use requestCode, client_id and client_secret to obtain final access token --------------------*/
+    public void getAccessToken(Context context, String code) {
+        LinkedList<NameValuePair> values = new LinkedList<>();
+            values.add(new BasicNameValuePair("client_id", CLIENT_ID));
+            values.add(new BasicNameValuePair("client_secret", CLIENT_SECRET));
+            values.add(new BasicNameValuePair("response_type", "code"));
+            values.add(new BasicNameValuePair("redirect_uri", "urn:ietf:wg:oauth:2.0:oob"));
+            values.add(new BasicNameValuePair("code", code));
     }
 }
