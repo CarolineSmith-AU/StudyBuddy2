@@ -1,6 +1,7 @@
 package com.example.studybuddy2;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,10 +20,16 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.LinkedList;
 import java.util.Objects;
 
-import retrofit2.http.POST;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private SharedPreferences sharedPreferences;
+    private String PREFS = "My Preferences";
     private String selectedSchool;
     private String authenticationURL;
     private Button confirmSchoolButton;
@@ -37,12 +44,16 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
+
         /* << -------------------- set up toolbar -------------------- >> */
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Select School");
 
 
+
+        /* << -------------------- set up SharedPreferences to save access token -------------------- >>*/
+        sharedPreferences = getSharedPreferences(PREFS, MODE_PRIVATE);
 
         /* << -------------------- set up searchable spinner -------------------- >> */
         Spinner schoolSearchableSpinner = findViewById(R.id.schoolSearchableSpinner);
@@ -118,22 +129,46 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /* -------------------- use requestCode, client_id and client_secret to obtain final access token --------------------*/
-    public void getAccessToken(Context context, String code) {
+    private void getAccessToken(Context context, String code) {
         LinkedList<NameValuePair> values = new LinkedList<>();
-            values.add(new BasicNameValuePair("client_id", CLIENT_ID));
-            values.add(new BasicNameValuePair("client_secret", CLIENT_SECRET));
-            values.add(new BasicNameValuePair("response_type", "code"));
-            values.add(new BasicNameValuePair("redirect_uri", "urn:ietf:wg:oauth:2.0:oob"));
-            values.add(new BasicNameValuePair("code", code));
+            values.add(new BasicNameValuePair("client_id", CLIENT_ID)); //index: 0
+            values.add(new BasicNameValuePair("client_secret", CLIENT_SECRET)); //index: 1
+            values.add(new BasicNameValuePair("response_type", "code")); //index: 2
+            values.add(new BasicNameValuePair("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")); //index: 3
+            values.add(new BasicNameValuePair("code", code)); //index: 4
 
-            String result = sendPost(context, "/login/oauth2/token", values);
+            //String result = sendPost(context, "/login/oauth2/token", values);
     }
 
-    public String sendPost(Context context, String exchangeUri, LinkedList<NameValuePair> values) {
+    private void sendPost(Context context, String exchangeUri, LinkedList<NameValuePair> values) {
 
+        /* << -------------------- use Retrofit object to set up base URL and to implement GSON converter-------------------- >>*/
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://auburn.instructure.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        CanvasApi canvasApi = retrofit.create(CanvasApi.class); //retrofit adds own implementation
+        Call<String> call = canvasApi.sendCode(values.get(0).getValue(), values.get(1).getValue(), values.get(3).getValue(), values.get(4).getValue());
+
+        //run in background thread
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                String token = response.body();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                //what to put here?
+            }
+        });
     }
 
-    public void setUpWebView(WebView web, String authUrl) {
+    private void setUpWebView(WebView web, String authUrl) {
         setContentView(web);
         web.loadUrl(authenticationURL);
     }

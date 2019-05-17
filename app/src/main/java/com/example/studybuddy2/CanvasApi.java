@@ -15,7 +15,7 @@ public interface CanvasApi {
     //Call<List<UserInfo>> getUserInfo();
 
     @FormUrlEncoded
-        @POST ("/login/oauth2/token") //URL where code will be sent
+        @POST ("/login/oauth2/token") //endpoint URL where code will be sent
         Call<String> sendCode(
                 @Field("client_id") String client_id,
                 @Field("client_secret") String client_secret,
