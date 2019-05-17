@@ -19,6 +19,8 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.LinkedList;
 import java.util.Objects;
 
+import retrofit2.http.POST;
+
 public class LoginActivity extends AppCompatActivity {
 
     private String selectedSchool;
@@ -96,8 +98,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 /* -------------------- set up WebView for authenticationURL --------------------*/
                 final WebView web = new WebView(LoginActivity.this);
-                setContentView(web);
-                web.loadUrl(authenticationURL);
+                setUpWebView(web, authenticationURL);
+
 
                 web.setWebViewClient(new WebViewClient() {
                     @Override
@@ -106,8 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                             requestCode = url.substring(url.indexOf(successURL) + url.length());
                             return true;
                         } else {
-                            //redirect back to authenticationURL
-                            //web.loadUrl(authenticationURL);
+                            setUpWebView(web, authenticationURL); //redirect back to authenticationURL => prompt another login attempt
                             return false;
                         }
                     }
@@ -125,6 +126,15 @@ public class LoginActivity extends AppCompatActivity {
             values.add(new BasicNameValuePair("redirect_uri", "urn:ietf:wg:oauth:2.0:oob"));
             values.add(new BasicNameValuePair("code", code));
 
+            String result = sendPost(context, "/login/oauth2/token", values);
+    }
 
+    public String sendPost(Context context, String exchangeUri, LinkedList<NameValuePair> values) {
+
+    }
+
+    public void setUpWebView(WebView web, String authUrl) {
+        setContentView(web);
+        web.loadUrl(authenticationURL);
     }
 }
