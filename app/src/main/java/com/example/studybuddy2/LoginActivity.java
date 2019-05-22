@@ -87,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                         */
                     case "Auburn University Main Campus":
                         authenticationURL = "https://auburn.instructure.com/login/oauth2/auth?client_id=XXX&response_type=code&redirect_uri=urn:ietf:wg:oauth:2.0:oob";
+
                         Toast.makeText(LoginActivity.this, selectedSchool + " selected", Toast.LENGTH_SHORT).show();
                         break;
                     default:
@@ -137,11 +138,11 @@ public class LoginActivity extends AppCompatActivity {
             values.add(new BasicNameValuePair("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")); //index: 3
             values.add(new BasicNameValuePair("code", code)); //index: 4
 
-            //String result = sendPost(context, "/login/oauth2/token", values);
+            sendPost(context, "/login/oauth2/token", values);
+
     }
 
     private void sendPost(Context context, String exchangeUri, LinkedList<NameValuePair> values) {
-
         /* << -------------------- use Retrofit object to set up base URL and to implement GSON converter-------------------- >>*/
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://auburn.instructure.com")
@@ -149,20 +150,35 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
 
         CanvasApi canvasApi = retrofit.create(CanvasApi.class); //retrofit adds own implementation
-        Call<String> call = canvasApi.sendCode(values.get(0).getValue(), values.get(1).getValue(), values.get(3).getValue(), values.get(4).getValue());
+        Call<ResponseAccessToken> call = canvasApi.sendCode("authorization_code", values.get(0).getValue(), values.get(1).getValue(), values.get(3).getValue(), values.get(4).getValue());
 
-        //run in background thread
-        call.enqueue(new Callback<String>() {
+        //run in background thread (execute asynchronously)
+        call.enqueue(new Callback<ResponseAccessToken>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                String token = response.body();
+            public void onResponse(Call<ResponseAccessToken> call, Response<ResponseAccessToken> response) {
+                if (!response.isSuccessful()) {
+                    //what to do here?
+                }
+                ResponseAccessToken responseAccessToken = response.body();
+
+                String access_token = responseAccessToken.getAccess_token();
+                String token_type = responseAccessToken.getToken_type();
+                User user = responseAccessToken.getUserInfo();
+                String refresh_token = responseAccessToken.getRefresh_token();
+                int expires_in = responseAccessToken.getExpires_in();
+
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-
-
+                editor.putString("access_token", access_token);
+                editor.putString("token_type", token_type);
+                editor.putInt("id", user.getId());
+                editor.putString("name", user.getName());
+                editor.putString("refresh_token", refresh_token);
+                editor.putInt("expires_in", expires_in);
+                editor.apply();
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<ResponseAccessToken> call, Throwable t) {
                 //what to put here?
             }
         });
