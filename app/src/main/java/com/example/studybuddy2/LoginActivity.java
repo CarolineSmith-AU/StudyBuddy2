@@ -13,13 +13,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
-import com.instructure.canvasapi.utilities.*;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.LinkedList;
 import java.util.Objects;
 
+import JSONObjects.ResponseAccessToken;
+import JSONObjects.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

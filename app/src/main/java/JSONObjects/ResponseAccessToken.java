@@ -1,4 +1,4 @@
-package com.example.studybuddy2;
+package JSONObjects;
 
 public class ResponseAccessToken {
 
