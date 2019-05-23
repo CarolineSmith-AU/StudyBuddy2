@@ -17,11 +17,15 @@ import android.widget.Toast;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
+import JSONObjects.Course;
 import JSONObjects.ResponseAccessToken;
 import JSONObjects.User;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private String selectedSchool;
     private String authenticationURL;
     private Button confirmSchoolButton;
+    private CanvasApi canvasApi;
     private static final String successURL = "/login/oauth2/auth?code=";
     private static final String CLIENT_ID = "";
     private static final String CLIENT_SECRET = "";
@@ -56,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
 
         /* << -------------------- set up SharedPreferences to save access token -------------------- >>*/
         sharedPreferences = getSharedPreferences(PREFS, MODE_PRIVATE);
+
+
 
         /* << -------------------- set up searchable spinner -------------------- >> */
         Spinner schoolSearchableSpinner = findViewById(R.id.schoolSearchableSpinner);
@@ -145,13 +152,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void sendPost(Context context, String exchangeUri, LinkedList<NameValuePair> values) {
-        /* << -------------------- use Retrofit object to set up base URL and to implement GSON converter-------------------- >>*/
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://auburn.instructure.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        CanvasApi canvasApi = retrofit.create(CanvasApi.class); //retrofit adds own implementation
+        canvasApi = setUpRetrofitPOST().create(CanvasApi.class);
         Call<ResponseAccessToken> call = canvasApi.sendCode("authorization_code", values.get(0).getValue(), values.get(1).getValue(), values.get(3).getValue(), values.get(4).getValue());
 
         //run in background thread (execute asynchronously)
@@ -186,8 +187,39 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private ArrayList<String> getCourses() {
+        canvasApi = setUpRetrofitGET().create(CanvasApi.class);
+        Call<List<Course>> call = canvasApi.getCourses(sharedPreferences.getInt("id", -1)); //-1 is the default value
+        return null;
+    }
+
     private void setUpWebView(WebView web, String authUrl) {
         setContentView(web);
         web.loadUrl(authenticationURL);
+    }
+
+    private Retrofit setUpRetrofitPOST() {
+        /* << -------------------- use Retrofit object to set up base URL and to implement GSON converter-------------------- >>*/
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://auburn.instructure.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit;
+    }
+
+    //uses OkHttpClient using access_token
+    private Retrofit setUpRetrofitGET() {
+        /* << -------------------- set up OkHttpClient -------------------- >>*/
+
+        //OkHttpClient okHttpClient = new OkHttpClient().Builder();
+
+        /* << -------------------- use Retrofit object to set up base URL and to implement GSON converter-------------------- >>*/
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://auburn.instructure.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit;
     }
 }
