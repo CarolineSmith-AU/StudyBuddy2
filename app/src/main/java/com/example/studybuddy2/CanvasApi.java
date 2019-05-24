@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -25,6 +26,6 @@ public interface CanvasApi {
         );
 
     @GET("/api/v1/users/{user_id}/courses")
-    Call<List<Course>> getCourses(@Path("user_id") int user_id);
+    Call<List<Course>> getUserCourses(@Header("Authorization") String access_token, @Path("user_id") int user_id);
 }
 

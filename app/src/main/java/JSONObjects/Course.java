@@ -20,6 +20,7 @@ public class Course {
         return course_code;
     }
 
+    //the current state of the course one of 'unpublished', 'available', 'completed', or 'deleted'
     public String getWorkflow_state() {
         return workflow_state;
     }

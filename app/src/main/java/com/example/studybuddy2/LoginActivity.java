@@ -26,6 +26,7 @@ import JSONObjects.Course;
 import JSONObjects.ResponseAccessToken;
 import JSONObjects.User;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
+        canvasApi = setUpRetrofit().create(CanvasApi.class);
 
         /* << -------------------- set up toolbar -------------------- >> */
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -152,7 +153,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void sendPost(Context context, String exchangeUri, LinkedList<NameValuePair> values) {
-        canvasApi = setUpRetrofitPOST().create(CanvasApi.class);
         Call<ResponseAccessToken> call = canvasApi.sendCode("authorization_code", values.get(0).getValue(), values.get(1).getValue(), values.get(3).getValue(), values.get(4).getValue());
 
         //run in background thread (execute asynchronously)
@@ -162,22 +162,24 @@ public class LoginActivity extends AppCompatActivity {
                 if (!response.isSuccessful()) {
                     //what to do here?
                 }
-                ResponseAccessToken responseAccessToken = response.body();
+                else {
+                    ResponseAccessToken responseAccessToken = response.body();
 
-                String access_token = responseAccessToken.getAccess_token();
-                String token_type = responseAccessToken.getToken_type();
-                User user = responseAccessToken.getUserInfo();
-                String refresh_token = responseAccessToken.getRefresh_token();
-                int expires_in = responseAccessToken.getExpires_in();
+                    String access_token = responseAccessToken.getAccess_token();
+                    String token_type = responseAccessToken.getToken_type();
+                    User user = responseAccessToken.getUserInfo();
+                    String refresh_token = responseAccessToken.getRefresh_token();
+                    int expires_in = responseAccessToken.getExpires_in();
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("access_token", access_token);
-                editor.putString("token_type", token_type);
-                editor.putInt("id", user.getId());
-                editor.putString("name", user.getName());
-                editor.putString("refresh_token", refresh_token);
-                editor.putInt("expires_in", expires_in);
-                editor.apply();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("access_token", access_token);
+                    editor.putString("token_type", token_type);
+                    editor.putInt("id", user.getId());
+                    editor.putString("name", user.getName());
+                    editor.putString("refresh_token", refresh_token);
+                    editor.putInt("expires_in", expires_in);
+                    editor.apply();
+                }
             }
 
             @Override
@@ -187,9 +189,25 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private ArrayList<String> getCourses() {
-        canvasApi = setUpRetrofitGET().create(CanvasApi.class);
-        Call<List<Course>> call = canvasApi.getCourses(sharedPreferences.getInt("id", -1)); //-1 is the default value
+    private ArrayList<String> getUserCourses() {
+        Call<List<Course>> call = canvasApi.getUserCourses(sharedPreferences.getString("access_token", "INVALID TOKEN"), sharedPreferences.getInt("id", -1)); //sec. field is default token
+        call.enqueue(new Callback<List<Course>>() {
+            @Override
+            public void onResponse(Call<List<Course>> call, Response<List<Course>> response) {
+                if (!response.isSuccessful()) {
+                    //what to do here?
+                }
+                else {
+                    List<Course> userCourses = response.body();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Course>> call, Throwable t) {
+                //what to put here?
+            }
+        });
         return null;
     }
 
@@ -198,22 +216,7 @@ public class LoginActivity extends AppCompatActivity {
         web.loadUrl(authenticationURL);
     }
 
-    private Retrofit setUpRetrofitPOST() {
-        /* << -------------------- use Retrofit object to set up base URL and to implement GSON converter-------------------- >>*/
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://auburn.instructure.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        return retrofit;
-    }
-
-    //uses OkHttpClient using access_token
-    private Retrofit setUpRetrofitGET() {
-        /* << -------------------- set up OkHttpClient -------------------- >>*/
-
-        //OkHttpClient okHttpClient = new OkHttpClient().Builder();
-
+    private Retrofit setUpRetrofit() {
         /* << -------------------- use Retrofit object to set up base URL and to implement GSON converter-------------------- >>*/
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://auburn.instructure.com")
