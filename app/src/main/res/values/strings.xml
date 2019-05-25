@@ -4,6 +4,7 @@
     <string name="select_your_school">Select your school</string>
     <string name="confirm_school_button">Confirm School</string>
     <string name="logo_description">StudyBuddy logo</string>
+    <string name="configure_text_view">Configuring your courses</string>
     <string-array name="canvas_schools">
         <item>Alfred State College</item>
         <item>American College of Education</item>

@@ -1,6 +1,7 @@
 package com.example.studybuddy2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,7 +12,9 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
@@ -22,11 +25,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import AfterLogin.HomePageActivity;
 import JSONObjects.Course;
 import JSONObjects.ResponseAccessToken;
 import JSONObjects.User;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
     private String selectedSchool;
     private String authenticationURL;
     private Button confirmSchoolButton;
+    private ImageView iconImageView;
+    private TextView iconTextView;
     private CanvasApi canvasApi;
     private static final String successURL = "/login/oauth2/auth?code=";
     private static final String CLIENT_ID = "";
@@ -52,6 +56,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         canvasApi = setUpRetrofit().create(CanvasApi.class);
+        iconImageView = findViewById(R.id.iconImageView);
+        iconTextView = findViewById(R.id.iconTextView);
 
         /* << -------------------- set up toolbar -------------------- >> */
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -97,7 +103,10 @@ public class LoginActivity extends AppCompatActivity {
                         */
                     case "Auburn University Main Campus":
                         authenticationURL = "https://auburn.instructure.com/login/oauth2/auth?client_id=XXX&response_type=code&redirect_uri=urn:ietf:wg:oauth:2.0:oob";
-
+                        iconImageView.setImageResource(R.drawable.canvas_icon);
+                        iconImageView.setVisibility(View.VISIBLE);
+                        iconTextView.setText("Your school uses Canvas");
+                        iconTextView.setVisibility(View.VISIBLE);
                         Toast.makeText(LoginActivity.this, selectedSchool + " selected", Toast.LENGTH_SHORT).show();
                         break;
                     default:
@@ -135,6 +144,9 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+                /* <<-------------------- call getAccessToken() -------------------- >> */
+                getAccessToken(LoginActivity.this, requestCode);
             }
         });
     }
@@ -148,15 +160,14 @@ public class LoginActivity extends AppCompatActivity {
             values.add(new BasicNameValuePair("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")); //index: 3
             values.add(new BasicNameValuePair("code", code)); //index: 4
 
-            sendPost(context, "/login/oauth2/token", values);
+            sendPost(values);
 
     }
 
-    private void sendPost(Context context, String exchangeUri, LinkedList<NameValuePair> values) {
+    private void sendPost(LinkedList<NameValuePair> values) {
         Call<ResponseAccessToken> call = canvasApi.sendCode("authorization_code", values.get(0).getValue(), values.get(1).getValue(), values.get(3).getValue(), values.get(4).getValue());
 
-        //run in background thread (execute asynchronously)
-        call.enqueue(new Callback<ResponseAccessToken>() {
+        call.enqueue(new Callback<ResponseAccessToken>() { //.enqueue runs in background thread (execute asynchronously)
             @Override
             public void onResponse(Call<ResponseAccessToken> call, Response<ResponseAccessToken> response) {
                 if (!response.isSuccessful()) {
@@ -179,6 +190,9 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("refresh_token", refresh_token);
                     editor.putInt("expires_in", expires_in);
                     editor.apply();
+
+                    //Intent toHomePageActivity = new Intent(LoginActivity.this, HomePageActivity.class);
+                    //startActivity(toHomePageActivity);
                 }
             }
 
@@ -189,7 +203,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private ArrayList<String> getUserCourses() {
+    private void getUserCourses() {
         Call<List<Course>> call = canvasApi.getUserCourses(sharedPreferences.getString("access_token", "INVALID TOKEN"), sharedPreferences.getInt("id", -1)); //sec. field is default token
         call.enqueue(new Callback<List<Course>>() {
             @Override
@@ -208,7 +222,6 @@ public class LoginActivity extends AppCompatActivity {
                 //what to put here?
             }
         });
-        return null;
     }
 
     private void setUpWebView(WebView web, String authUrl) {

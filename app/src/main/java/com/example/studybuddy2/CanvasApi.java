@@ -25,6 +25,7 @@ public interface CanvasApi {
                 @Field("code") String code
         );
 
+    //TODO: Look into using Authorization header instead of passing token as a parameter.
     @GET("/api/v1/users/{user_id}/courses")
     Call<List<Course>> getUserCourses(@Header("Authorization") String access_token, @Path("user_id") int user_id);
 }

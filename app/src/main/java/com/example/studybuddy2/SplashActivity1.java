@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity {
+public class SplashActivity1 extends AppCompatActivity {
 
     Timer timer;
     int SLEEP_TIMER = 4000;
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_splash1);
 
         final ImageView logoImageView = findViewById(R.id.logoImageView);
 
@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() { //necessary to avoid error message
                     @Override
                     public void run() {
-                        Intent toLoginActivity = new Intent(MainActivity.this, LoginActivity.class);
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this,
+                        Intent toLoginActivity = new Intent(SplashActivity1.this, LoginActivity.class);
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashActivity1.this,
                                 logoImageView, getString(R.string.transition_name_1));
                         startActivity(toLoginActivity, options.toBundle());
                         finish();
