@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="AfterLogin.HomePageActivity">
+    tools:context="cls0097.auburn.edu.studybuddy.Pages.HomePageActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar">
+    </include>
 
 </android.support.constraint.ConstraintLayout>

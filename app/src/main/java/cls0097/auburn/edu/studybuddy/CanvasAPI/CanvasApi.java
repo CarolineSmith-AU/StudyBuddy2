@@ -1,17 +1,15 @@
-package com.example.studybuddy2;
+package cls0097.auburn.edu.studybuddy.CanvasAPI;
 
 import java.util.List;
 
-import JSONObjects.Course;
-import JSONObjects.ResponseAccessToken;
+import cls0097.auburn.edu.studybuddy.JSONObjects.Course;
+import cls0097.auburn.edu.studybuddy.JSONObjects.ResponseAccessToken;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 
 public interface CanvasApi {
 
@@ -26,7 +24,7 @@ public interface CanvasApi {
         );
 
     //TODO: Look into using Authorization header instead of passing token as a parameter.
-    @GET("/api/v1/users/{user_id}/courses")
-    Call<List<Course>> getUserCourses(@Header("Authorization") String access_token, @Path("user_id") int user_id);
+    @GET("/api/v1/courses")
+    Call<List<Course>> getUserCourses(@Header("Authorization") String access_token);
 }
 

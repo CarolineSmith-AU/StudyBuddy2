@@ -1,4 +1,4 @@
-package com.example.studybuddy2;
+package cls0097.auburn.edu.studybuddy.OpeningApp;
 
 import android.content.Intent;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -6,8 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.example.studybuddy2.R;
+
 import java.util.Timer;
 import java.util.TimerTask;
+
+import cls0097.auburn.edu.studybuddy.Login.LoginActivity;
 
 public class SplashActivity1 extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.studybuddy2;
+package cls0097.auburn.edu.studybuddy.Login;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,18 +17,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cls0097.auburn.edu.studybuddy.CanvasAPI.CanvasApi;
+import com.example.studybuddy2.R;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 
-import AfterLogin.HomePageActivity;
-import JSONObjects.Course;
-import JSONObjects.ResponseAccessToken;
-import JSONObjects.User;
+import cls0097.auburn.edu.studybuddy.Pages.HomePageActivity;
+import cls0097.auburn.edu.studybuddy.JSONObjects.ResponseAccessToken;
+import cls0097.auburn.edu.studybuddy.JSONObjects.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,8 +37,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private SharedPreferences sharedPreferences;
-    private String PREFS = "My Preferences";
+    public SharedPreferences sharedPreferences;
+    public static final String PREFS = "My Preferences";
     private String selectedSchool;
     private String authenticationURL;
     private Button confirmSchoolButton;
@@ -58,6 +58,8 @@ public class LoginActivity extends AppCompatActivity {
         canvasApi = setUpRetrofit().create(CanvasApi.class);
         iconImageView = findViewById(R.id.iconImageView);
         iconTextView = findViewById(R.id.iconTextView);
+
+
 
         /* << -------------------- set up toolbar -------------------- >> */
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -165,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void sendPost(LinkedList<NameValuePair> values) {
-        Call<ResponseAccessToken> call = canvasApi.sendCode("authorization_code", values.get(0).getValue(), values.get(1).getValue(), values.get(3).getValue(), values.get(4).getValue());
+        Call<ResponseAccessToken> call = canvasApi.sendCode("refresh_token", values.get(0).getValue(), values.get(1).getValue(), values.get(3).getValue(), values.get(4).getValue());
 
         call.enqueue(new Callback<ResponseAccessToken>() { //.enqueue runs in background thread (execute asynchronously)
             @Override
@@ -175,24 +177,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
                     ResponseAccessToken responseAccessToken = response.body();
-
-                    String access_token = responseAccessToken.getAccess_token();
-                    String token_type = responseAccessToken.getToken_type();
                     User user = responseAccessToken.getUserInfo();
-                    String refresh_token = responseAccessToken.getRefresh_token();
-                    int expires_in = responseAccessToken.getExpires_in();
 
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("access_token", access_token);
-                    editor.putString("token_type", token_type);
-                    editor.putInt("id", user.getId());
-                    editor.putString("name", user.getName());
-                    editor.putString("refresh_token", refresh_token);
-                    editor.putInt("expires_in", expires_in);
-                    editor.apply();
+                    saveAccessData(responseAccessToken, user);
 
-                    //Intent toHomePageActivity = new Intent(LoginActivity.this, HomePageActivity.class);
-                    //startActivity(toHomePageActivity);
+                    Intent toHomePageActivity = new Intent(LoginActivity.this, HomePageActivity.class);
+                    startActivity(toHomePageActivity);
                 }
             }
 
@@ -203,25 +193,18 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void getUserCourses() {
-        Call<List<Course>> call = canvasApi.getUserCourses(sharedPreferences.getString("access_token", "INVALID TOKEN"), sharedPreferences.getInt("id", -1)); //sec. field is default token
-        call.enqueue(new Callback<List<Course>>() {
-            @Override
-            public void onResponse(Call<List<Course>> call, Response<List<Course>> response) {
-                if (!response.isSuccessful()) {
-                    //what to do here?
-                }
-                else {
-                    List<Course> userCourses = response.body();
-                }
+    private void saveAccessData(ResponseAccessToken responseAccessToken, User user) {
+        String access_token = responseAccessToken.getAccess_token();
+        String token_type = responseAccessToken.getToken_type();
+        int expires_in = responseAccessToken.getExpires_in();
 
-            }
-
-            @Override
-            public void onFailure(Call<List<Course>> call, Throwable t) {
-                //what to put here?
-            }
-        });
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("access_token", access_token);
+        editor.putString("token_type", token_type);
+        editor.putInt("id", user.getId());
+        editor.putString("name", user.getName());
+        editor.putInt("expires_in", expires_in);
+        editor.apply();
     }
 
     private void setUpWebView(WebView web, String authUrl) {

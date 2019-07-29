@@ -1,4 +1,4 @@
-package JSONObjects;
+package cls0097.auburn.edu.studybuddy.JSONObjects;
 
 public class Course {
     private int id;
